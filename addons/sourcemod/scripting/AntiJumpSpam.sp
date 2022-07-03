@@ -9,7 +9,9 @@
 
 #pragma newdecls required
 
+#if defined _zr_included
 bool g_bZRLoaded;
+#endif
 
 ConVar g_cvarJumpsUntilBlock = null;
 ConVar g_cvarIntervalBetweenJumps = null;
@@ -39,19 +41,25 @@ public void OnPluginStart()
 
 public void OnAllPluginsLoaded()
 {
+#if defined _zr_included
 	g_bZRLoaded = LibraryExists("zombiereloaded");
+#endif
 }
 
 public void OnLibraryAdded(const char[] sName)
 {
+#if defined _zr_included
 	if (strcmp(sName, "zombiereloaded", false) == 0)
 		g_bZRLoaded = true;
+#endif
 }
 
 public void OnLibraryRemoved(const char[] sName)
 {
+#if defined _zr_included
 	if (strcmp(sName, "zombiereloaded", false) == 0)
 		g_bZRLoaded = false;
+#endif
 }
 
 public void OnClientDisconnect(int client)
