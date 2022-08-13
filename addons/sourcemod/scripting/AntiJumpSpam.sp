@@ -26,7 +26,7 @@ public Plugin myinfo =
 	name = "Anti Jump Spam",
 	author = "Obus",
 	description = "Prevents clients from spamming jump to avoid knockback in crawl spaces.",
-	version = "1.0.0",
+	version = "1.1",
 	url = ""
 }
 
@@ -70,6 +70,9 @@ public void OnClientDisconnect(int client)
 
 public Action OnPlayerRunCmd(int client, int &buttons)
 {
+	if (!IsClientInGame(client))
+		return Plugin_Handled;
+	
 	static bool bHoldingJump[MAXPLAYERS + 1];
 
 #if defined _zr_included
