@@ -71,7 +71,7 @@ public void OnClientDisconnect(int client)
 public Action OnPlayerRunCmd(int client, int &buttons)
 {
 	if (!IsClientInGame(client))
-		return Plugin_Handled;
+		return Plugin_Continue;
 	
 	static bool bHoldingJump[MAXPLAYERS + 1];
 
