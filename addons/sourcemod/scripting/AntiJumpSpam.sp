@@ -26,7 +26,7 @@ public Plugin myinfo =
 	name = "Anti Jump Spam",
 	author = "Obus",
 	description = "Prevents clients from spamming jump to avoid knockback in crawl spaces.",
-	version = "1.1",
+	version = "1.1.0",
 	url = ""
 }
 
