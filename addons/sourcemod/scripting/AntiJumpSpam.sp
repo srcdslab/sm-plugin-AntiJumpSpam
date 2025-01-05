@@ -3,15 +3,9 @@
 #include <sourcemod>
 #include <cstrike>
 
-#undef REQUIRE_PLUGIN
-#tryinclude <zombiereloaded>
-#define REQUIRE_PLUGIN
-
 #pragma newdecls required
 
-#if defined _zr_included
 bool g_bZRLoaded;
-#endif
 
 ConVar g_cvarJumpsUntilBlock = null;
 ConVar g_cvarIntervalBetweenJumps = null;
@@ -26,7 +20,7 @@ public Plugin myinfo =
 	name = "Anti Jump Spam",
 	author = "Obus",
 	description = "Prevents clients from spamming jump to avoid knockback in crawl spaces.",
-	version = "1.1.0",
+	version = "1.2",
 	url = ""
 }
 
@@ -41,25 +35,19 @@ public void OnPluginStart()
 
 public void OnAllPluginsLoaded()
 {
-#if defined _zr_included
 	g_bZRLoaded = LibraryExists("zombiereloaded");
-#endif
 }
 
 public void OnLibraryAdded(const char[] sName)
 {
-#if defined _zr_included
 	if (strcmp(sName, "zombiereloaded", false) == 0)
 		g_bZRLoaded = true;
-#endif
 }
 
 public void OnLibraryRemoved(const char[] sName)
 {
-#if defined _zr_included
 	if (strcmp(sName, "zombiereloaded", false) == 0)
 		g_bZRLoaded = false;
-#endif
 }
 
 public void OnClientDisconnect(int client)
@@ -70,18 +58,19 @@ public void OnClientDisconnect(int client)
 
 public Action OnPlayerRunCmd(int client, int &buttons)
 {
+	if (!g_bZRLoaded)
+		return Plugin_Continue;
+
 	if (!IsClientInGame(client))
 		return Plugin_Continue;
-	
-	static bool bHoldingJump[MAXPLAYERS + 1];
 
-#if defined _zr_included
-	if (!IsPlayerAlive(client) || (g_bZRLoaded && !ZR_IsClientZombie(client)) || (!g_bZRLoaded && GetClientTeam(client) != CS_TEAM_T))
+	if (GetClientTeam(client) != CS_TEAM_T)
 		return Plugin_Continue;
-#else
-	if (!IsPlayerAlive(client) || GetClientTeam(client) != CS_TEAM_T)
+
+	if (!IsPlayerAlive(client))
 		return Plugin_Continue;
-#endif
+
+	static bool bHoldingJump[MAXPLAYERS + 1];
 
 	if (buttons & IN_JUMP && GetEntityFlags(client) & FL_ONGROUND)
 	{
