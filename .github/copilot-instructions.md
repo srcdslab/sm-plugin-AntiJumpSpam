@@ -5,10 +5,10 @@ This repository contains **AntiJumpSpam**, a SourceMod plugin that prevents play
 
 ## Technical Environment
 - **Language**: SourcePawn (.sp files)
-- **Platform**: SourceMod 1.11.0+ (currently targeting 1.11.0-git6934)
-- **Build System**: SourceKnight 0.2 (configured in `sourceknight.yaml`)
-- **Compiler**: SourcePawn compiler (spcomp) via SourceKnight
-- **CI/CD**: GitHub Actions using `maxime1907/action-sourceknight@v1`
+- **Platform**: SourceMod 1.12.x (currently targeting 1.12.0-git7223)
+- **Build System**: Native GitHub Actions (no external build tool)
+- **Compiler**: SourcePawn compiler (spcomp) via `rumblefrog/setup-sp`
+- **CI/CD**: GitHub Actions, defined directly in `.github/workflows/ci.yml`
 
 ## Project Structure
 ```
@@ -21,8 +21,6 @@ addons/sourcemod/
 ├── workflows/
 │   └── ci.yml                 # Automated build and release
 └── dependabot.yml             # Dependency updates
-
-sourceknight.yaml              # Build configuration
 ```
 
 ## Code Style & Standards
@@ -53,14 +51,15 @@ static bool bHoldingJump[MAXPLAYERS + 1];     // Static with type prefix
 
 ### Building the Plugin
 ```bash
-# The repository uses SourceKnight for building
 # CI/CD automatically builds on push/PR using GitHub Actions
-# Manual build would require SourceKnight setup locally
+# Manual build requires spcomp (SourcePawn compiler) matching the SourceMod
+# version declared in .github/workflows/ci.yml, run from
+# addons/sourcemod/scripting/:
+#   spcomp -i include -o ../plugins/AntiJumpSpam.smx AntiJumpSpam.sp
 ```
 
 ### Key Build Files
-- `sourceknight.yaml`: Defines build configuration, dependencies, and output
-- `.github/workflows/ci.yml`: Automated CI/CD pipeline
+- `.github/workflows/ci.yml`: Defines the SourceMod compiler version, build steps, and CI/CD pipeline
 - Build outputs go to `/addons/sourcemod/plugins/`
 
 ### Testing Approach
